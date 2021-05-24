@@ -31,12 +31,12 @@ function getData(token) {
   fetch(URL, header)
     .then(res=>res.json())
     .then(data=>{
-      const {viewers} = data.stream
-      console.log('>', data);
+      const {viewers} = data?.stream || 0;
+      console.log('>', data || 'No hay datos');
       console.log('>', viewers);
 
       document.querySelector('.viewers').innerHTML = viewers;
     });
 }
 
-getToken();
+//getToken();
