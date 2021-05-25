@@ -1,27 +1,68 @@
 .app {
-  background: blue;
-  font-family: Roboto, helvetica, arial, sans-serif; 
+  background: blue;  /* TODO: Delete */
+  font-family: Source Sans Pro, times, helvetica, arial, sans-serif; 
 }
-.viewers {
+.app__viewers {
   color: white;
   width: 70px;
   height: 50px;
   position: relative;
   padding-left: 45px;
+  padding-top: 28px;
   text-align: left;
-  line-height: 28px;
-  font-weight: 500;
-  font-size: 25px;
 }
 
-.viewers::after {
+.app__viewers::after {
   content: '';
   position: absolute;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 33px;
   width: 40px;
   height: 40px;
   background: url(../img/twitch.svg) left top no-repeat;
   background-size: cover;
+}
+
+.app__viewers-counter {
+  line-height: 28px;
+  font-weight: 600;
+  font-size: 28px;
+}
+
+.app__viewers-counter--next {
+  opacity: 0;
+}
+
+
+.app__viewers--animate-up .app__viewers-counter,
+.app__viewers--animate-down .app__viewers-counter {
+  transition: opacity ease-out .2s, transform ease .75s;
+  transform: translateY(-100%);
+}
+
+.app__viewers--animate-up .app__viewers-counter--current {
+  opacity: 0;
+}
+.app__viewers--animate-up .app__viewers-counter--next {
+  opacity: 1;
+}
+
+.app__viewers--animate-down .app__viewers-counter {
+  transform: translateY(100%);
+}
+.app__viewers--animate-down .app__viewers-counter--current {
+  opacity: 0;
+}
+.app__viewers--animate-down .app__viewers-counter--next {
+  opacity: 1;
+  position: relative;
+  top: -56px;
+}
+
+
+
+
+
+.hidden {
+  display:none;
 }
