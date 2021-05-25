@@ -1,19 +1,30 @@
 import {CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CHANNEL_ID } from './vars.js';
 
+let ACTIVE = false;
+let tokenData;
 
-function getToken() {
+async function getTwitchToken() {
+  tokenData = await getToken();
+  ACTIVE = true;
+  getData(tokenData.access_token);
+  const extendedRequest = setTimeout(async () => {
+    if (ACTIVE) { 
+      tokenData = await getToken();
+      ACTIVE = false;
+      clearTimeout(extendedRequest);
+    }
+  }, tokenData.expires_in);
+}
+
+async function getToken() {
   const URL = `https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials&scope=user:read:email`;
 
-  fetch(URL, {
-    method: 'POST'
-  })
+  return fetch(URL, { method: 'POST' })
     .then(res => res.json())
     .then(data => {
-      const token = data.access_token;
-      console.log(data);
-      getData(token);
+      const { access_token, expires_in } = data;
+      return { access_token, expires_in };
     });
-
 }
 
 function getData(token) {
@@ -31,12 +42,15 @@ function getData(token) {
   fetch(URL, header)
     .then(res=>res.json())
     .then(data=>{
-      const {viewers} = data?.stream || 0;
-      console.log('>', data || 'No hay datos');
-      console.log('>', viewers);
-
-      document.querySelector('.viewers').innerHTML = viewers;
+      const {stream} = data;
+      let totalViewers = 0;
+      if (stream) {
+        totalViewers = data.stream.viewers;
+        console.log('>', data || 'No hay datos');
+        console.log('>', totalViewers);
+      }
+      document.querySelector('.viewers').innerHTML = totalViewers;
     });
 }
 
-//getToken();
+getTwitchToken();
