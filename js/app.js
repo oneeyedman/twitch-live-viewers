@@ -2,6 +2,7 @@ import {CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CHANNEL_ID } from './vars.js';
 
 let ACTIVE = false;
 let tokenData;
+const viewersContainer = document.querySelector('.js__viewers');
 
 async function getTwitchToken() {
   tokenData = await getToken();
@@ -49,8 +50,8 @@ function getData(token) {
         console.log('>', data || 'No hay datos');
         console.log('>', totalViewers);
       }
-      document.querySelector('.viewers').innerHTML = totalViewers;
+      viewersContainer.innerHTML = totalViewers;
     });
 }
 
-getTwitchToken();
+//getTwitchToken();
