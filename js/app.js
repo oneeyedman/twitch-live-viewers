@@ -1,12 +1,11 @@
-import {CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CHANNEL_ID } from './vars.js';
+import {
+  CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CHANNEL_ID, REFRESH_MS, COUNTER_UPDATE } from './vars.js';
 
 let ACTIVE = false;
 let tokenData;
 const viewersContainer = document.querySelector('.js__viewers');
 const viewersCurrent = document.querySelector('.js__viewers-current');
 const viewersNext = document.querySelector('.js__viewers-next');
-const REFRESH_MS = 5000;
-const COUNTER_UPDATE = 700;
 let currentViewers = 0;
 let nextViewers = 0;
 
@@ -63,7 +62,6 @@ function getData(token) {
     });
 }
 
-//getTwitchToken();
 
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -89,4 +87,6 @@ function checkViewers() {
   update && updateViewersCounter();
 }
 
-//setInterval(checkViewers, REFRESH_MS);
+//getTwitchToken();
+viewersContainer.classList.remove('hidden');
+setInterval(checkViewers, REFRESH_MS);

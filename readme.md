@@ -9,8 +9,17 @@ const CLIENT_ID = 'XXX';
 const CLIENT_SECRET = 'XXX';
 const REDIRECT_URL = 'http://localhost:PORT/';
 const CHANNEL_ID = 'XXX';
+const REFRESH_MS = 5000;
+const COUNTER_UPDATE = 700;
 
-export {CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CHANNEL_ID};
+export {
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URL,
+  CHANNEL_ID,
+  REFRESH_MS,
+  COUNTER_UPDATE
+  };
 ```
 
 No me aclaro muy bien cómo gestionar estas claves así que monto un servidor local durante el directo y todos contentos.
