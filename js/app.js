@@ -1,5 +1,4 @@
-import {
-  CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CHANNEL_ID, REFRESH_MS, COUNTER_UPDATE } from './vars.js';
+import {CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CHANNEL_ID, REFRESH_MS, COUNTER_UPDATE } from './vars.js';
 
 let ACTIVE = false;
 let tokenData;
@@ -8,6 +7,10 @@ const viewersCurrent = document.querySelector('.js__viewers-current');
 const viewersNext = document.querySelector('.js__viewers-next');
 let currentViewers = 0;
 let nextViewers = 0;
+
+
+
+
 
 async function getTwitchToken() {
   tokenData = await getToken();
@@ -25,6 +28,10 @@ async function getTwitchToken() {
   }, tokenData.expires_in);
 }
 
+
+
+
+
 async function getToken() {
   const URL = `https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials&scope=user:read:email`;
 
@@ -35,6 +42,10 @@ async function getToken() {
       return { access_token, expires_in };
     });
 }
+
+
+
+
 
 function getData(token) {
   const URL = 'https://api.twitch.tv/kraken/streams/' + CHANNEL_ID;
@@ -63,9 +74,8 @@ function getData(token) {
 }
 
 
-function randomInteger(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+
+
 
 function updateViewersCounter() {
   const animationClassModifier = (nextViewers > currentViewers) ? '--animate-up' : '--animate-down';
@@ -80,13 +90,27 @@ function updateViewersCounter() {
   }, COUNTER_UPDATE);
 } 
 
-function checkViewers() {
+
+
+
+
+function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+
+
+
+
+function fakeViewers() {
   nextViewers = randomInteger(0, 150);
   const update = currentViewers !== nextViewers;
-  console.log(update, currentViewers, '->',  nextViewers);
+  console.log(update, currentViewers, '->', nextViewers);
   update && updateViewersCounter();
 }
 
+
 //getTwitchToken();
 viewersContainer.classList.remove('hidden');
-setInterval(checkViewers, REFRESH_MS);
+setInterval(fakeViewers, REFRESH_MS);
