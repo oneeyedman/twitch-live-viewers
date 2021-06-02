@@ -1,7 +1,8 @@
-import {CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CHANNEL_ID, REFRESH_MS, COUNTER_UPDATE } from './vars.js';
+import { CLIENT_ID, CLIENT_SECRET, USER_LOGIN, REFRESH_MS, COUNTER_UPDATE } from './vars.js';
 import { getFakeViewers } from './fake-viewers.js';
 
-let ACTIVE = false;
+let channelId;
+let ACTIVE = true;
 let tokenData;
 const viewersContainer = document.querySelector('.js__viewers');
 const viewersCurrent = document.querySelector('.js__viewers-current');
@@ -15,7 +16,7 @@ let nextViewers = 0;
 
 async function getTwitchToken() {
   tokenData = await getToken();
-  ACTIVE = true;
+  getStreamData(tokenData.access_token);
   setInterval(() => {
     getStreamData(tokenData.access_token);
   }, REFRESH_MS);
@@ -47,8 +48,29 @@ async function getToken() {
 
 
 
-function getStreamData(token) {
-  const URL = 'https://api.twitch.tv/kraken/streams/' + CHANNEL_ID;
+async function getChannelID(user, token) {
+  const URL = `https://api.twitch.tv/helix/users?login=${user}`;
+  const header = {
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Client-ID': CLIENT_ID,
+      'Accept': 'application/vnd.twitchtv.v5+json'
+    }
+  };
+  return fetch(URL, header)
+    .then(res => res.json())
+    .then(data => data.data[0].id);
+}
+
+
+
+
+
+async function getStreamData(token) {
+  if (!channelId) {
+    channelId = await getChannelID(USER_LOGIN, token);
+  }
+  const URL = 'https://api.twitch.tv/kraken/streams/' + channelId;
   const header = {
     headers: {
       'Authorization': 'Bearer ' + token,
@@ -65,7 +87,7 @@ function getStreamData(token) {
         viewersContainer.classList.remove('hidden');
         nextViewers = data.stream.viewers;
         const update = currentViewers !== nextViewers;
-        update && updateViewersCounter(nextFakeViewers, nextViewers);
+        update && updateViewersCounter(currentViewers, nextViewers);
       } else {
         viewersContainer.classList.add('hidden');
       }
@@ -95,12 +117,12 @@ function updateViewersCounter(currentTotal, nextTotal) {
 
 
 
-//getTwitchToken();
+getTwitchToken();
 
 /* FOR TESTING PURPOSES ONLY */
-viewersContainer.classList.remove('hidden');
-setInterval(() => {
-  const { update, currentFakeViewers, nextFakeViewers } = getFakeViewers(currentViewers);
+// viewersContainer.classList.remove('hidden');
+// setInterval(() => {
+//   const { update, currentFakeViewers, nextFakeViewers } = getFakeViewers(currentViewers);
 
-  update && updateViewersCounter(currentFakeViewers, nextFakeViewers);
-}, REFRESH_MS);
+//   update && updateViewersCounter(currentFakeViewers, nextFakeViewers);
+// }, REFRESH_MS);
